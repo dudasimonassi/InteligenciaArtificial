@@ -1,0 +1,53 @@
+Jogo dos oito - mais genérico possível
+
+
+* Backtraking
+
+* Busca em largura
+
+* Busca em profundidade (limitada)
+
+* Busca ordenada
+
+* Busca gulosa
+
+* Busca A*
+
+* Busca IDA*
+
+-> Caminho (movimentos com o 0)
+-> Profundidade e custo da solução
+-> Numero total de nós expandidos e vistados
+-> Valor médio do fator de ramificação da árvore de busca
+-> Tempo de execução 
+
+
+------------------------------------------------------------------------
+
+Classes:
+
+* Tabuleiro
+	
+	-> tamanho (n)
+	-> vetor bidimensional de peças 
+
+	-> construtor: define o tamanho da matriz e a inicializa vazia
+	-> get e set size 
+	-> função para inicializar o tabuleiro (como fazer a partir da leitura de arquivo?)
+	-> função para verificar se esta resolvido (verifica peça a peça se o que está no tabuleiro é o esperado)
+	-> função que verifica se é possivel resolver o caso abordado
+
+* Peças
+
+	-> valor 
+
+	-> get e set valor
+
+* Estado 
+	-> tabuleiro 
+	-> pai (também é um estado)
+	-> 
+
+	-> função que armazene os movimentos que estão sendo feitos para imprimir o caminho final 
+	-> função que armazena a profundidade que a solução está chegando 
+	
