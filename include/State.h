@@ -22,9 +22,11 @@ class State{
 
         State(Board *board, State *finalState, std::vector<State> parents);
         Board* getBoard();
+        State* getFinalState();
+        int getSize();
         bool isFinalState();
         void possibleMovements();
-        void createChildren();
+        bool isPossible();
 
 };
 
