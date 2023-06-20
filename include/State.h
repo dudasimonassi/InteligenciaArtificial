@@ -20,7 +20,8 @@ class State{
 
     public:
 
-        State(Board *board, State *finaState, std::vector<State> parents);
+        State(Board *board, State *finalState, std::vector<State> parents);
+        Board* getBoard();
         bool isFinalState();
         void possibleMovements();
         void createChildren();

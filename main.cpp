@@ -10,10 +10,12 @@
 #include "include/Board.h"
 #include "include/Piece.h"
 #include "include/State.h"
+#include "src/Board.cpp"
+#include "src/Piece.cpp"
 
 using namespace std;
 
-Board * readFile(ifstream& input_file){
+State * readFile(ifstream& input_file){
 
     int size;
     int pieceValue;
@@ -27,17 +29,34 @@ Board * readFile(ifstream& input_file){
         for(int j = 0; j<size; j++){
 
             input_file >> pieceValue;
-            Piece piece = Piece(pieceValue, i, j);
+            Piece *piece = new Piece(pieceValue, i, j);
             board->setPiece(piece, i, j);
 
         }
 
     }
 
-    
+    Board *finalBoard = new Board(size);
 
+    for(int i = 0; i<size; i++){
 
-    return board;
+        for(int j = 0; j<size; j++){
+
+            input_file >> pieceValue;
+            Piece *piece = new Piece(pieceValue, i, j);
+            finalBoard->setPiece(piece, i, j);
+
+        }
+
+    }
+
+    std::vector<State> parents;
+
+    State *finalState = new State(finalBoard, finalState, parents);
+
+    State *initialState = new State(board, finalState, parents);
+
+    return initialState;
 }
 
 int main (int argc, char const *argv[]){
@@ -47,9 +66,9 @@ int main (int argc, char const *argv[]){
         cout << "ERROR: Expecting: ./<program_name> <input_file> <output_file>" << endl;
 
         return 1;
-    
-    }
 
+    }
+    
     string program_name(argv[0]);
     string input_file_name = argv[1];
 
@@ -60,11 +79,13 @@ int main (int argc, char const *argv[]){
     input_file.open(argv[1], ios::in);
     output_file.open(argv[2], ios::out | ios::trunc);
 
-    Board *board;
+    State *initialState;
 
-    if(input_file.is_open())
-        board = readFile(input_file);
-        
+    if(input_file.is_open()){
+        initialState = readFile(input_file);
+        initialState->getBoard()->printBoard();
+    }
+      
     else 
         cout << "\nNao foi possivel abrir o arquivo  " << argv[1] << "\n";
         

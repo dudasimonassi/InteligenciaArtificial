@@ -12,7 +12,7 @@ class Board{
     private:
 
         int size;
-        std::vector<std::vector<Piece>> pieces;
+        std::vector<std::vector<Piece*>> pieces;
 
     public:
 
@@ -20,10 +20,12 @@ class Board{
 
         int getSize();
 
-        Piece getPiece(int positionX, int positionY);
-        void setPiece(Piece piece, int positionX, int positionY);
+        Piece* getPiece(int positionX, int positionY);
+        void setPiece(Piece *piece, int positionX, int positionY);
 
         std::vector<int> getZeroPosition();
+
+        void printBoard();
 
 };
 

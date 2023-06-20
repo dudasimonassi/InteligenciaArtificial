@@ -69,3 +69,9 @@ void State::possibleMovements(){
 void State::createChildren(){
 
 }
+
+Board* State::getBoard(){
+
+    return this->board;
+
+}
