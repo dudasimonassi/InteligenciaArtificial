@@ -1,11 +1,10 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <math.h>
-#include <utility>
-#include <tuple>
 #include <iomanip>
 #include <chrono>
+#include <stack>
+#include <list>
 #include <ctime>
 #include "include/Board.h"
 #include "include/Piece.h"
@@ -51,9 +50,9 @@ State * readFile(ifstream& input_file){
 
     }
 
-    std::vector<State> parents;
+    std::vector<State*> parents;
 
-    State *finalState = new State(finalBoard, finalState, parents);
+    State *finalState = new State(finalBoard);
 
     State *initialState = new State(board, finalState, parents);
 
@@ -86,38 +85,55 @@ void mainMenu(State *initialState){
 
             cin >> option;
 
+            auto start = std::chrono::high_resolution_clock::now();
+
+            std::stack<State*> openStates;
+            openStates.push(initialState);
+
+            std::list<State*> closedStates;
+
             switch (option) {
                 case 0:
+
                     cout << "Exiting the program." << endl;
                     break;
-                case 1:
+
+                case 1:{
+                    
                     cout << "You chose Backtracking." << endl;
-                    // Call the corresponding Backtracking function here
+
+                    initialState->backtracking(initialState);
+
+                    auto end = std::chrono::high_resolution_clock::now();
+                    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                    cout << "Search processing time: " << duration << " microseconds" << endl;
+
                     break;
+                }
                 case 2:
                     cout << "You chose Breadth-First Search." << endl;
-                    // Call the corresponding Breadth-First Search function here
+                   initialState->bfs();
                     break;
                 case 3:
                     cout << "You chose Depth-First Search." << endl;
-                    // Call the corresponding Depth-First Search function here
+                    initialState->dfs();
                     break;
                 case 4:
                     cout << "You chose Ordered Search." << endl;
-                    // Call the corresponding Ordered Search function here
+                    initialState->ordered();
                     break;
                 case 5:
                     cout << "You chose Greedy Search." << endl;
-                    // Call the corresponding Greedy Search function here
+                    initialState->greedy();
                     break;
                 case 6:
                     cout << "You chose A* Search." << endl;
-                    // Call the corresponding A* Search function here
+                    initialState->aStar();
                     break;
                 case 7:
                     cout << "You chose IDA* Search." << endl;
-                    // Call the corresponding IDA* Search function here
-                    break;
+                    initialState->idaStar();
                 default:
                     cout << "Invalid option. Please try again." << endl;
                     break;

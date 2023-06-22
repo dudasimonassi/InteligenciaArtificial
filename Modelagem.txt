@@ -15,11 +15,8 @@ Jogo dos oito - mais genérico possível
 
 * Busca IDA*
 
--> Caminho (movimentos com o 0)
--> Profundidade e custo da solução
+-> Custo da solução
 -> Numero total de nós expandidos e vistados
--> Valor médio do fator de ramificação da árvore de busca
--> Tempo de execução 
 
 
 ------------------------------------------------------------------------
