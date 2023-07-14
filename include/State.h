@@ -20,7 +20,6 @@ class State{
         State *finalState;
         std::vector<std::string> movements{"Up", "Down", "Right", "Left"};
         std::vector<State*> parents;
-        string movement;
 
     public:
 
@@ -31,16 +30,14 @@ class State{
         State* getFinalState();
         int getSize();
         std::vector<State*> getParents();
-        string getMovement();
 
         void setLastParent(State* parent);
-        void setMovement(string movement);
 
         bool isFinalState();
         bool isEqualState(State * state);
         bool isPossible();
-        vector<State*> generateChildStates();
         void possibleMovements();
+        vector<State*> generateChildStates();
 
         void backtracking();
         void bfs();

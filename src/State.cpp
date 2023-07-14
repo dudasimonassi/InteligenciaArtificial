@@ -13,6 +13,7 @@
 
 using namespace std;
 
+// Funções de Ordenação para o algoritmo de busca ordenada
 void mergeOrdered(std::vector<State*>& list, int begin, int mid, int end) {
     int n1 = mid - begin + 1;
     int n2 = end - mid;
@@ -67,6 +68,7 @@ void mergeSortOrdered(std::vector<State*>& list, int begin, int end) {
     }
 }
 
+// Funções de Ordenação para o algoritmo de busca gulosa
 void mergeGreedy(std::vector<State*>& list, int begin, int mid, int end) {
     int n1 = mid - begin + 1;
     int n2 = end - mid;
@@ -121,6 +123,7 @@ void mergeSortGreedy(std::vector<State*>& list, int begin, int end) {
     }
 }
 
+// Funções de Ordenação para o algoritmo de busca A*
 void mergeAstar(std::vector<State*>& list, int begin, int mid, int end) {
     int n1 = mid - begin + 1;
     int n2 = end - mid;
@@ -215,21 +218,9 @@ std::vector<State*> State::getParents(){
 
 }
 
-string State::getMovement(){
-
-    return this->movement;
-
-}
-
 void State::setLastParent(State* parent){
 
     this->parents.push_back(parent);
-
-}
-
-void State::setMovement(string movement){
-
-    this->movement = movement;
 
 }
 
@@ -266,45 +257,6 @@ bool State::isEqualState(State *state){
     }
 
     return true;
-
-}
-
-void State::possibleMovements(){
-
-    if(this->board->getZeroPosition()[1] == ((this->board->getSize())-1)){
-
-        auto it = std::find(movements.begin(), movements.end(), "Right");
-        if (it != movements.end()) {
-            movements.erase(it);
-        }
-    }
-
-    if(this->board->getZeroPosition()[1] == 0){
-
-        auto it = std::find(movements.begin(), movements.end(), "Left");
-        if (it != movements.end()) {
-            movements.erase(it);
-
-        }
-    }
-
-    if(this->board->getZeroPosition()[0] == ((this->board->getSize())-1)){
-
-        auto it = std::find(movements.begin(), movements.end(), "Down");
-        if (it != movements.end()) {
-            movements.erase(it);
-
-        }
-    }
-
-    if(this->board->getZeroPosition()[0] == 0){
-
-        auto it = std::find(movements.begin(), movements.end(), "Up");
-        if (it != movements.end()) {
-            movements.erase(it);
-
-        }
-    }
 
 }
 
@@ -348,6 +300,45 @@ bool State::isPossible(){
 
 }
 
+void State::possibleMovements(){
+
+    if(this->board->getZeroPosition()[1] == ((this->board->getSize())-1)){
+
+        auto it = std::find(movements.begin(), movements.end(), "Right");
+        if (it != movements.end()) {
+            movements.erase(it);
+        }
+    }
+
+    if(this->board->getZeroPosition()[1] == 0){
+
+        auto it = std::find(movements.begin(), movements.end(), "Left");
+        if (it != movements.end()) {
+            movements.erase(it);
+
+        }
+    }
+
+    if(this->board->getZeroPosition()[0] == ((this->board->getSize())-1)){
+
+        auto it = std::find(movements.begin(), movements.end(), "Down");
+        if (it != movements.end()) {
+            movements.erase(it);
+
+        }
+    }
+
+    if(this->board->getZeroPosition()[0] == 0){
+
+        auto it = std::find(movements.begin(), movements.end(), "Up");
+        if (it != movements.end()) {
+            movements.erase(it);
+
+        }
+    }
+
+}
+
 std::vector<State*> State::generateChildStates() {
     int zeroX = this->board->getZeroPosition()[0];
     int zeroY = this->board->getZeroPosition()[1];
@@ -360,16 +351,12 @@ std::vector<State*> State::generateChildStates() {
         
         if (movement == "Up") {
             childState->getBoard()->swapPieces(zeroX, zeroY, zeroX - 1, zeroY);
-            childState->setMovement("Up");
         } else if (movement == "Down") {
             childState->getBoard()->swapPieces(zeroX, zeroY, zeroX + 1, zeroY);
-            childState->setMovement("Down");
         } else if (movement == "Left") {
             childState->getBoard()->swapPieces(zeroX, zeroY, zeroX, zeroY - 1);
-            childState->setMovement("Left");
         } else if (movement == "Right") {
             childState->getBoard()->swapPieces(zeroX, zeroY, zeroX, zeroY + 1);
-            childState->setMovement("Right");
         }
         
         childStates.push_back(childState);

@@ -19,16 +19,9 @@ int Board::getSize(){
 
 }
 
-
 Piece* Board::getPiece(int positionX, int positionY){
 
     return pieces[positionX][positionY];
-
-}
-
-void Board::setPiece(Piece *piece,int positionX, int positionY){
-
-    pieces[positionX][positionY] = piece;
 
 }
 
@@ -64,6 +57,26 @@ std::vector<int> Board::getPosition(int value){
 
 }
 
+Board* Board::getBoardCopy() {
+    Board* boardCopy = new Board(this->size);
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            Piece* piece = this->pieces[i][j];
+            Piece* pieceCopy = new Piece(piece->getValue(), piece->getPosition()[0], piece->getPosition()[1]);
+            boardCopy->setPiece(pieceCopy, i, j);
+        }
+    }
+
+    return boardCopy;
+}
+
+void Board::setPiece(Piece *piece,int positionX, int positionY){
+
+    pieces[positionX][positionY] = piece;
+
+}
+
 void Board::printBoard(){
 
  for(int i=0; i<size; i++){
@@ -78,20 +91,6 @@ void Board::printBoard(){
 
     }
 
-}
-
-Board* Board::getBoardCopy() {
-    Board* boardCopy = new Board(this->size);
-
-    for (int i = 0; i < size; i++) {
-        for (int j = 0; j < size; j++) {
-            Piece* piece = this->pieces[i][j];
-            Piece* pieceCopy = new Piece(piece->getValue(), piece->getPosition()[0], piece->getPosition()[1]);
-            boardCopy->setPiece(pieceCopy, i, j);
-        }
-    }
-
-    return boardCopy;
 }
 
 void Board::swapPieces(int x1, int y1, int x2, int y2) {

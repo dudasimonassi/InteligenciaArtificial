@@ -19,15 +19,14 @@ class Board{
         Board(int size);
 
         int getSize();
-
         Piece* getPiece(int positionX, int positionY);
-        void setPiece(Piece *piece, int positionX, int positionY);
-
         std::vector<int> getZeroPosition();
         std::vector<int> getPosition(int value);
+        Board* getBoardCopy();
+
+        void setPiece(Piece *piece, int positionX, int positionY);
 
         void printBoard();
-        Board* getBoardCopy();
         void swapPieces(int x1, int y1, int x2, int y2);
 
 };

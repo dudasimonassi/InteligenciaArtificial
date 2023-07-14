@@ -12,14 +12,14 @@ class Piece{
 
     public:
 
+        Piece(int value, int xPiecePosition, int yPiecePosition);
+
         int xPiecePosition;
         int yPiecePosition;
 
-        Piece(int value, int xPiecePosition, int yPiecePosition);
-
-        void setValue(int value);
         int getValue();
-
+        void setValue(int value);
+        
         std::vector<int> getPosition();
 
 };
