@@ -20,12 +20,7 @@ class State{
         State *finalState;
         std::vector<std::string> movements{"Up", "Down", "Right", "Left"};
         std::vector<State*> parents;
-        std::vector<string> path;
-        int depth = 0;
-        double branchingFactorSum = 0; 
-        int nodeCount = 1; 
-        int expandedCount = 0; 
-        int visitedCount = 0; 
+        string movement;
 
     public:
 
@@ -34,28 +29,20 @@ class State{
         
         Board* getBoard();
         State* getFinalState();
-        int getDepth();
         int getSize();
         std::vector<State*> getParents();
-        std::vector<string> getPath();
-        double getBranchingFactorSum();
-        int getNodeCount();
-        int getExpandedCount();
-        int getVisitedCount();
+        string getMovement();
 
-        void setBranchingFactorSum(double branchingFactorSumIncrement);
-        void setNodeCount(int nodeCountIncrement);
-        void setExpandedCount(int expandedCountIncrement);
-        void setVisitedCount(int visitedCountIncremen);
         void setLastParent(State* parent);
+        void setMovement(string movement);
 
         bool isFinalState();
         bool isEqualState(State * state);
         bool isPossible();
-
+        vector<State*> generateChildStates();
         void possibleMovements();
 
-        void backtracking(State * initialState);
+        void backtracking();
         void bfs();
         void dfs();
         void ordered();
@@ -63,6 +50,8 @@ class State{
         void aStar();
         void idaStar();
 
+        int cost();
+        int heuristic();
 };
 
 #endif  // STATE_H

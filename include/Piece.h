@@ -8,10 +8,12 @@ class Piece{
     private:
 
         int value;
-        int xPiecePosition;
-        int yPiecePosition;
+
 
     public:
+
+        int xPiecePosition;
+        int yPiecePosition;
 
         Piece(int value, int xPiecePosition, int yPiecePosition);
 

@@ -3,6 +3,9 @@
 #include <chrono>
 #include <stack>
 #include <list>
+#include <queue>
+#include <unordered_set>
+#include <set>
 #include <algorithm>
 #include "../include/Piece.h"
 #include "../include/Board.h"
@@ -26,7 +29,6 @@ State::State(Board *board){
 
 }
 
-
 Board* State::getBoard(){
 
     return this->board;
@@ -36,12 +38,6 @@ Board* State::getBoard(){
 State* State::getFinalState(){
 
     return this->finalState;
-
-}
-
-int State::getDepth(){
-
-    return this->depth;
 
 }
 
@@ -57,63 +53,21 @@ std::vector<State*> State::getParents(){
 
 }
 
-std::vector<string> State::getPath(){
+string State::getMovement(){
 
-    return this->path;
-
-}
-
-double State::getBranchingFactorSum(){
-
-    return this->branchingFactorSum;
-
-}
-
-int State::getNodeCount(){
-    
-    return this->nodeCount;
-
-}
-
-int State::getExpandedCount(){
-
-    return this->expandedCount;
-
-}
-
-int State::getVisitedCount(){
-
-    return this->visitedCount;
+    return this->movement;
 
 }
 
 void State::setLastParent(State* parent){
 
-    this->getParents().push_back(parent);
+    this->parents.push_back(parent);
 
 }
 
-void State::setBranchingFactorSum(double branchingFactorSumIncrement){
+void State::setMovement(string movement){
 
-    this->branchingFactorSum += branchingFactorSumIncrement;
-
-}
-        
-void State::setNodeCount(int nodeCountIncrement){
-
-    this->nodeCount += nodeCountIncrement;
-
-}
-        
-void State::setExpandedCount(int expandedCountIncrement){
-
-    this->expandedCount += expandedCountIncrement;
-
-}
-        
-void State::setVisitedCount(int visitedCountIncrement){
-
-    this->visitedCount += visitedCountIncrement;
+    this->movement = movement;
 
 }
 
@@ -232,107 +186,163 @@ bool State::isPossible(){
 
 }
 
-void State::backtracking(State * initialState){
+std::vector<State*> State::generateChildStates() {
+    int zeroX = this->board->getZeroPosition()[0];
+    int zeroY = this->board->getZeroPosition()[1];
 
-    while(!this->isFinalState()){
+    std::vector<State*> childStates;
 
-        this->possibleMovements();
-
-        if(!this->movements.empty()){
-
-            string move = this->movements[0];
-
-            int zeroRow = this->getBoard()->getZeroPosition()[0];
-            int zeroColumn = this->getBoard()->getZeroPosition()[0];
-
-            Piece *zeroPiece = new Piece(0, zeroRow, zeroColumn);
-
-            if(move == "Up"){
-                Piece *movingPiece = new Piece(this->getBoard()->getPiece(zeroRow-1, zeroColumn)->getValue(), zeroRow, zeroColumn); 
-
-                this->board->setPiece(movingPiece, zeroRow, zeroColumn);
-                this->board->setPiece(zeroPiece, zeroRow-1, zeroColumn);
-
-                this->path.push_back(move);
-
-            }
-            else if(move == "Down"){
-                Piece *movingPiece = new Piece(this->getBoard()->getPiece(zeroRow+1, zeroColumn)->getValue(), zeroRow, zeroColumn); 
-
-                this->board->setPiece(movingPiece, zeroRow, zeroColumn);
-                this->board->setPiece(zeroPiece, zeroRow+1, zeroColumn);
-
-                this->path.push_back(move);
-
-            }
-            else if(move == "Left"){
-                Piece *movingPiece = new Piece(this->getBoard()->getPiece(zeroRow, zeroColumn-1)->getValue(), zeroRow, zeroColumn); 
-
-                this->board->setPiece(movingPiece, zeroRow, zeroColumn);
-                this->board->setPiece(zeroPiece, zeroRow, zeroColumn-1);
-
-                this->path.push_back(move);           
-            }
-            else if(move == "Right"){
-                Piece *movingPiece = new Piece(this->getBoard()->getPiece(zeroRow, zeroColumn+1)->getValue(), zeroRow, zeroColumn); 
-
-                this->board->setPiece(movingPiece, zeroRow, zeroColumn);
-                this->board->setPiece(zeroPiece, zeroRow, zeroColumn+1);
-
-                this->path.push_back(move);            
-            }
-
-        }
-
-        else{
-
-            if(this->isEqualState(initialState)){
-
-                cout << "Search failure. There is no solution.";
-                exit(1);
-
-            }
-
-            else{
-
-                
-
-            }
-
-        }
-
-    }
-
-    cout << "End of the serach. " << endl;
-
-    if(!this->path.empty()){
-
-        cout << "Path:";
-        for(int i = 0; i < (this->path.size() -1) ; i++){
-            cout << this->getPath()[i] << " -> ";
-        }
-        cout << this->getPath()[this->path.size() -1] << endl;
+    for (const std::string& movement : movements) {
+        State* childState = new State(this->board->getBoardCopy(), this->finalState, this->parents);
+        childState->getParents().push_back(this);
         
+        if (movement == "Up") {
+            childState->getBoard()->swapPieces(zeroX, zeroY, zeroX - 1, zeroY);
+            childState->setMovement("Up");
+        } else if (movement == "Down") {
+            childState->getBoard()->swapPieces(zeroX, zeroY, zeroX + 1, zeroY);
+            childState->setMovement("Down");
+        } else if (movement == "Left") {
+            childState->getBoard()->swapPieces(zeroX, zeroY, zeroX, zeroY - 1);
+            childState->setMovement("Left");
+        } else if (movement == "Right") {
+            childState->getBoard()->swapPieces(zeroX, zeroY, zeroX, zeroY + 1);
+            childState->setMovement("Right");
+        }
+        
+        childStates.push_back(childState);
     }
 
-    cout << "Depth:" << this->getDepth() << endl;
-
-    double averageBranchingFactor = this->getBranchingFactorSum() / this->getNodeCount();
-    cout << "Average Branching Factor: " << averageBranchingFactor << endl;
-
+    return childStates;
 }
 
-void State::bfs(){
-
-
+void State::backtracking(){
+   
 }
 
-void State::dfs(){
+void State::bfs() { //Busca em Largura -> busca sempre o estado mais antigo 
+    std::queue<State*> openStates; //Lista de estados abertos
+    std::unordered_set<State*> closedStates; //Lista de estados fechados (todos os filhos foram gerados)
+    int childState = 0;
 
+    openStates.push(this); //Adiciona o estado inicial a lista de abertos
+
+    while (!openStates.empty()) {
+        State* currentState = openStates.front(); //Primeiro estado da lista vira o estado atual
+
+        if (currentState->isFinalState()) { //Verifica se atingiu o estado final 
+            cout << endl << "End of the search." << endl;
+            cout << endl << "Movements: " << endl;            
+            if(!currentState->getParents().empty()){
+                for (State* parent : currentState->getParents()) { 
+                    parent->getBoard()->printBoard();
+                    cout << endl;
+                }
+            }
+            currentState->getBoard()->printBoard();
+            cout << endl << "Solution depth: " << currentState->getParents().size() << endl; 
+            cout << "Solution cost: " << closedStates.size() + openStates.size() << endl;
+            cout << "Expanded nodes: " << closedStates.size() << endl;
+            cout << "Visited nodes: " << closedStates.size() + openStates.size() << endl;
+            cout << "Average branching factor value: " << static_cast<double> (childState) / closedStates.size() << endl;
+            return;
+        }
+
+        currentState->possibleMovements(); //Verifica os possiveis movimentos 
+
+        std::vector<State*> childStates = currentState->generateChildStates(); //Geração dos filhos 
+
+        childState =  childState + childStates.size(); 
+
+        openStates.pop();  //Estado removido da fila de estados abertos 
+        closedStates.insert(currentState);  //Inserção na lista de fechados _ filhos já foram gerados 
+
+        if(!currentState->getParents().empty()){
+            for (State* parent : currentState->getParents()) { //Para cada filho gerado verifica se o mesmo não é pai do estado atual
+                for(State* childState : childStates){
+                    if(childState->isEqualState(parent)){
+                            vector<State*>::iterator new_end = std::remove(childStates.begin(), childStates.end(), childState);
+                            childStates.erase(new_end, childStates.end());
+                    }
+                }
+            }
+        }
+
+        if(!childStates.empty()){ 
+
+            for (State* childState : childStates) { //Para cada filho gerado, verifica se o mesmo já é um estado fechado 
+                if (closedStates.find(childState) == closedStates.end()) { //Não é um estado fechado
+                    childState->setLastParent(currentState); //Atualiza a lista de pais 
+                    openStates.push(childState); // Adiciona o filho na fila
+                }
+            }
+        }
+    }
+}
+
+void State::dfs(){  //Busca em Profundidade -> busca sempre o estado mais novo
+    std::stack<State*> openStates; //Pilha de estados abertos
+    std::unordered_set<State*> closedStates; //Lista de estados fechados (todos os filhos foram gerados)
+    int childState = 0; // Controle da quantidade de filhos para gerar o fator médio de ramificação 
+
+    openStates.push(this); //Adiciona o estado inicial a pilha de abertos
+
+    while (!openStates.empty()) {
+        State* currentState = openStates.top(); //Primeiro estado da pilha vira o estado atual
+
+        if (currentState->isFinalState()) { //Verifica se atingiu o estado final 
+            cout << endl << "End of the search." << endl;
+            cout << endl << "Movements: " << endl;            
+            if(!currentState->getParents().empty()){
+                for (State* parent : currentState->getParents()) { 
+                    parent->getBoard()->printBoard();
+                    cout << endl;
+                }
+            }
+            currentState->getBoard()->printBoard();
+            cout << endl << "Solution depth: " << currentState->getParents().size() << endl; 
+            cout << "Solution cost: " << closedStates.size() + openStates.size() << endl;
+            cout << "Expanded nodes: " << closedStates.size() << endl;
+            cout << "Visited nodes: " << closedStates.size() + openStates.size() << endl;
+            cout << "Average branching factor value: " << static_cast<double> (childState) / closedStates.size() << endl;
+            return;
+        }
+
+        currentState->possibleMovements(); //Verifica os possiveis movimentos 
+
+        std::vector<State*> childStates = currentState->generateChildStates(); //Geração dos filhos 
+
+        childState =  childState + childStates.size(); 
+
+        openStates.pop();  //Estado removido da pilha de estados abertos 
+        closedStates.insert(currentState);  //Inserção na lista de fechados _ filhos já foram gerados 
+
+        if(!currentState->getParents().empty()){
+            for (State* parent : currentState->getParents()) { //Para cada filho gerado verifica se o mesmo não é pai do estado atual
+                for(State* childState : childStates){
+                    if(childState->isEqualState(parent)){
+                            vector<State*>::iterator new_end = std::remove(childStates.begin(), childStates.end(), childState);
+                            childStates.erase(new_end, childStates.end());
+                    }
+                }
+            }
+        }
+
+        if(!childStates.empty()){ 
+
+            for(int i = (childStates.size()-1); i >= 0; i--){ //Para manter a lógica da estratégia de controle 
+                if(closedStates.find(childStates[i]) == closedStates.end()){
+                    childStates[i]->setLastParent(currentState); //Atualiza a lista de pais 
+                    openStates.push(childStates[i]); // Adiciona o filho na pilha
+                }
+            }
+        }
+    }
 
 }
 
 void State::ordered(){
+
 
 
 }
@@ -348,6 +358,47 @@ void State::aStar(){
 }
 
 void State::idaStar(){
+
+}
+
+int State::cost(){ // O custo será calculado pela quantidade de peças fora do lugar 
+
+    int cost = 0;
+
+    for(int i = 0; i < this->board->getSize(); i++){
+
+        for(int j =0; j < this->board->getSize(); j++){
+
+            if(this->board->getPiece(i,j)->getValue() != this->finalState->getBoard()->getPiece(i,j)->getValue()){
+                cost++;
+            }
+
+        }
+
+    }
+
+    return cost;
+
+}
+
+int State::heuristic(){ //A heurística é calculada pela soma das distância de manhattan
+
+    int cost = 0;
+    int pieceValue;
+
+    for(int i = 0; i < this->board->getSize(); i++){
+
+        for(int j =0; j < this->board->getSize(); j++){
+
+            pieceValue = this->getBoard()->getPiece(i,j)->getValue();
+
+            cost = cost + (abs((this->getFinalState()->getBoard()->getPosition(pieceValue)[0] - this->getBoard()->getPiece(i,j)->getPosition()[0])) + abs(this->getFinalState()->getBoard()->getPosition(pieceValue)[1]- this->getBoard()->getPiece(i,j)->getPosition()[1]));
+
+        }
+
+    }
+
+    return cost;
 
 
 }
