@@ -95,7 +95,7 @@ void mainMenu(State *initialState){
 
                 case 1:{
                     
-                    cout << "You chose Backtracking." << endl;
+                    cout << "You choose Backtracking." << endl;
 
                     initialState->backtracking();
 
@@ -107,7 +107,7 @@ void mainMenu(State *initialState){
                     break;
                 }
                 case 2:{
-                    cout << endl << "You chose Breadth-First Search." << endl;
+                    cout << endl << "You choose Breadth-First Search." << endl;
                     initialState->bfs();
 
                     auto end = std::chrono::high_resolution_clock::now();
@@ -117,7 +117,7 @@ void mainMenu(State *initialState){
                     break;
                 }
                 case 3:{
-                    cout << endl << "You chose Depth-First Search." << endl;
+                    cout << endl << "You choose Depth-First Search." << endl;
                     initialState->dfs();
 
                     auto end = std::chrono::high_resolution_clock::now();
@@ -127,7 +127,7 @@ void mainMenu(State *initialState){
                     break;
                 }
                 case 4:{
-                    cout << endl << "You chose Ordered Search." << endl;
+                    cout << endl << "You choose Ordered Search." << endl;
                     initialState->ordered();
 
                     auto end = std::chrono::high_resolution_clock::now();
@@ -136,17 +136,36 @@ void mainMenu(State *initialState){
                     cout << endl << "Search processing time: " << duration << " microseconds" << endl;
                     break;
                 }
-                case 5:
-                    cout << "You chose Greedy Search." << endl;
+                case 5:{
+                    cout << endl << "You choose Greedy Search." << endl;
                     initialState->greedy();
+
+                    auto end = std::chrono::high_resolution_clock::now();
+                    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                    cout << endl << "Search processing time: " << duration << " microseconds" << endl;
                     break;
-                case 6:
-                    cout << "You chose A* Search." << endl;
+                }
+                case 6:{
+                    cout << endl << "You choose A* Search." << endl;
                     initialState->aStar();
+
+                    auto end = std::chrono::high_resolution_clock::now();
+                    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                    cout << endl << "Search processing time: " << duration << " microseconds" << endl;
                     break;
-                case 7:
-                    cout << "You chose IDA* Search." << endl;
+                }
+                case 7:{
+                    cout << endl << "You chose IDA* Search." << endl;
                     initialState->idaStar();
+                    
+                    auto end = std::chrono::high_resolution_clock::now();
+                    auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                    cout << endl << "Search processing time: " << duration << " microseconds" << endl;
+                    break;
+                }
                 default:
                     cout << "Invalid option. Please try again." << endl;
                     break;
