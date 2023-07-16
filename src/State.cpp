@@ -206,12 +206,6 @@ State* State::getFinalState(){
 
 }
 
-int State::getSize(){
-
-    return this->board->getSize();
-
-}
-
 std::vector<State*> State::getParents(){
     
     return this->parents;
@@ -264,7 +258,7 @@ bool State::isPossible(){
 
     int initialStateInversions = 0;
     int finalStateInversions = 0;
-    int size =  this->getSize();
+    int size =  this->board->getSize();
 
     for (int i = 0; i < (size * size - 1); i++) {
 
@@ -507,7 +501,7 @@ void State::ordered(){ //Busca Ordenada -> seleciona sempre o de menor custo deb
             cout << endl << "Movements: " << endl;            
             if(!currentState->getParents().empty()){
                 for (State* parent : currentState->getParents()) { 
-                    parent->getBoard()->printBoard();
+                    parent->getBoard()->printBoard();   
                     cout << endl;
                 }
             }

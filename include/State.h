@@ -28,7 +28,6 @@ class State{
         
         Board* getBoard();
         State* getFinalState();
-        int getSize();
         std::vector<State*> getParents();
 
         void setLastParent(State* parent);
