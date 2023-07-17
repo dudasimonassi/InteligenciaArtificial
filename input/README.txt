@@ -1,4 +1,4 @@
-Para testes é disponibilzado um acervo com dez instâncias que podem ser rodadas da seguinte forma: 
+Para testes é disponibilzado um acervo com instâncias que podem ser rodadas da seguinte forma: 
 
   ./main.exe input/NomeTeste.txt
 

@@ -359,8 +359,50 @@ std::vector<State*> State::generateChildStates() {
     return childStates;
 }
 
-void State::backtracking(){
-   
+bool State::backtracking(int& visitedNodes, int& expandedNodes){ // Busca backtracking -> gera apenas um filho por vez 
+    expandedNodes++;
+
+    if(this->isFinalState()) { //Verifica se o estado atual é o estado final
+        cout << endl << "End of the search." << endl;
+        cout << endl << "Movements: " << endl;
+        if (!this->getParents().empty()) {
+            for (State* parent : this->getParents()) {
+                parent->getBoard()->printBoard();
+                cout << endl;
+            }
+        }
+        cout << endl << "Solution depth: " << getParents().size() << endl;
+        cout << "Solution cost: " << visitedNodes << endl; // O custo da solução é o número de estados fechados visitados
+        cout << "Expanded nodes: " << expandedNodes << endl;
+        cout << "Visited nodes: " << visitedNodes << endl; // O número de nós visitados é igual ao número de estados fechados
+        cout << "Average branching factor value: " << static_cast<double>(visitedNodes) / expandedNodes << endl;
+        return true;
+    }
+
+    this->possibleMovements(); // Verifica os possíveis movimentos
+
+    std::vector<State*> childStates = this->generateChildStates(); // Geração dos filhos
+
+    visitedNodes = visitedNodes +  childStates.size();
+
+    if(!this->getParents().empty()){
+        for (State* parent : this->getParents()) { //Para cada filho gerado verifica se o mesmo não é pai do estado atual
+            for(State* childState : childStates){
+                if(childState->isEqualState(parent)){
+                            vector<State*>::iterator new_end = std::remove(childStates.begin(), childStates.end(), childState);
+                            childStates.erase(new_end, childStates.end());
+                }
+            }
+        }
+    }
+
+    if (!childStates.empty()) {
+        for (State* childState : childStates) { // Para cada filho gerado
+                childState->setLastParent(this); // Atualiza a lista de pais
+                if(childState->backtracking(visitedNodes,expandedNodes)) // Chama recursivamente o backtracking para o filho
+                    return true;
+        }
+    }
 }
 
 void State::bfs() { //Busca em Largura -> busca sempre o estado mais antigo 
@@ -676,8 +718,62 @@ void State::aStar(){ //Busca A* -> seleciona sempre o de menor custo em relaçã
 
 }
 
-void State::idaStar() {
+bool State::auxIdaStar(int g, int& visitedNodes, int& expandedNodes, double& avgBranchingFactor, int threshold)
+{
+    int f = g + this->cost() + this->heuristic();  // Cálculo do valor f = g + h
 
+    if (f > threshold) {
+        return false;  // Limite excedido, não expande mais esse nó
+    }
+
+    if (this->isFinalState()) {
+        cout << endl << "End of the search." << endl;
+        cout << endl << "Movements: " << endl;
+        if (!this->getParents().empty()) {
+            for (State* parent : this->getParents()) {
+                parent->getBoard()->printBoard();
+                cout << endl;
+            }
+        }
+        cout << endl << "Solution depth: " << getParents().size() << endl;
+        cout << "Solution cost: " << visitedNodes << endl;
+        cout << "Expanded nodes: " << expandedNodes << endl;
+        cout << "Visited nodes: " << visitedNodes << endl;
+        cout << "Average branching factor value: " << avgBranchingFactor << endl;
+        return true;
+    }
+
+    this->possibleMovements();
+
+    std::vector<State*> childStates = this->generateChildStates();
+
+    expandedNodes += childStates.size();
+    avgBranchingFactor = static_cast<double>(expandedNodes) / visitedNodes;
+
+    for (State* childState : childStates) {
+        childState->setLastParent(this);
+        visitedNodes++;
+
+        if (childState->auxIdaStar(g + 1, visitedNodes, expandedNodes, avgBranchingFactor, threshold)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+void State::idaStar(){
+    int visitedNodes = 0;
+    int expandedNodes = 0;
+    double avgBranchingFactor = 0.0;
+    int threshold = this->cost() +  this->heuristic();
+
+    while (true) {
+        if (auxIdaStar(0, visitedNodes, expandedNodes, avgBranchingFactor, threshold)) {
+            break;  // Solução encontrada
+        }
+        threshold = 50;  // Aumenta o limite de busca
+    }
 }
   
 int State::cost(){ // O custo será calculado pela quantidade de peças fora do lugar 

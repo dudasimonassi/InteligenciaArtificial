@@ -94,10 +94,12 @@ void mainMenu(State *initialState){
                     break;
 
                 case 1:{
+                    int visitedNodes = 0;
+                    int expandedNodes = 0;   
                     
                     cout << "You choose Backtracking." << endl;
 
-                    initialState->backtracking();
+                    initialState->backtracking(visitedNodes, expandedNodes);
 
                     auto end = std::chrono::high_resolution_clock::now();
                     auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
@@ -158,6 +160,7 @@ void mainMenu(State *initialState){
                 }
                 case 7:{
                     cout << endl << "You chose IDA* Search." << endl;
+                
                     initialState->idaStar();
                     
                     auto end = std::chrono::high_resolution_clock::now();

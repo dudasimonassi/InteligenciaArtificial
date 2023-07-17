@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include <stack>
+#include <unordered_set>
 #include <list>
 #include <chrono>
 #include "Piece.h"
@@ -38,13 +39,16 @@ class State{
         void possibleMovements();
         vector<State*> generateChildStates();
 
-        void backtracking();
+        bool backtracking(int& visitedNodes, int& expandedNodes);
         void bfs();
         void dfs();
         void ordered();
         void greedy();
         void aStar();
         void idaStar();
+
+        bool auxIdaStar(int g, int& visitedNodes, int& expandedNodes, double& avgBranchingFactor,int threshold );
+
 
         int cost();
         int heuristic();
