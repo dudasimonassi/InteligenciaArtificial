@@ -46,8 +46,8 @@ Para testes é disponibilzado um acervo com dez instâncias que podem ser rodada
 Caso necessário é possível gerar novas instâncias no mesmo formato dos testes disponíveis:
 
 - Primeiro valor : tamanho n do seu puzzle
-- Primeiros n valores: estado inicial do tabuleiro (valores indo de 0 a (n^2)-1)
-- Últimos n valores: estado final do tabuleiro (valores indo de 0 a (n^2)-1)
+- Primeiros n^2 valores: estado inicial do tabuleiro (valores indo de 0 a (n^2)-1)
+- Últimos n^2 valores: estado final do tabuleiro (valores indo de 0 a (n^2)-1)
 
 Exemplo para tabuleiro 3x3:
 
